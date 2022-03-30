@@ -42,20 +42,20 @@ int main(int argc, char **argv) {
 
   if (argc < 2) {
     printf("%s\n", help);
-    exit(EXIT_SUCCESS);
+    return EXIT_SUCCESS;
   }
 
   for (int i = 1; i < argc; i++) {
     if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help")) {
       printf("%s\n", help);
-      exit(EXIT_SUCCESS);
+      return EXIT_SUCCESS;
     } else if (!strcmp(argv[i], "--version")) {
       printf("%s\n", version);
-      exit(EXIT_SUCCESS);
+      return EXIT_SUCCESS;
     } else if (!strcmp(argv[i], "--scale-w") || !strcmp(argv[i], "--scale-width")) {
       if (!(argc > i + 1)) {
         printf("error: %s: No value passed", argv[i]);
-        exit(EXIT_FAILURE);
+        return EXIT_FAILURE;
       }
       errno = 0;
       scalew = strtoumax(argv[++i], NULL, 10);
@@ -63,12 +63,12 @@ int main(int argc, char **argv) {
         char errmsg[128];
         strerror_s(errmsg, 128, errno);
         printf("error: %s: %s\n", argv[i], errmsg);
-        exit(EXIT_FAILURE);
+        return EXIT_FAILURE;
       }
     } else if (!strcmp(argv[i], "--scale-h") || !strcmp(argv[i], "--scale-height")) {
       if (!(argc > i + 1)) {
         printf("error: %s: No value passed", argv[i]);
-        exit(EXIT_FAILURE);
+        return EXIT_FAILURE;
       }
       errno = 0;
       scaleh = strtoumax(argv[++i], NULL, 10);
@@ -76,7 +76,7 @@ int main(int argc, char **argv) {
         char errmsg[128];
         strerror_s(errmsg, 128, errno);
         printf("error: %s: %s\n", argv[i], errmsg);
-        exit(EXIT_FAILURE);
+        return EXIT_FAILURE;
       }
     } else {
       imgf = argv[i];
@@ -86,7 +86,7 @@ int main(int argc, char **argv) {
 
   if (imgf == NULL) {
     printf("error: No image file passed\n");
-    exit(EXIT_FAILURE);
+    return EXIT_FAILURE;
   }
 
   int fcomp = 3; // Force 3 components, rgb
@@ -94,7 +94,7 @@ int main(int argc, char **argv) {
   unsigned char *image = stbi_load(imgf, &x, &y, NULL, fcomp); // NULL for comp because no need
   if (image == NULL) {
     printf("error: %s\n", stbi_failure_reason());
-    exit(EXIT_FAILURE);
+    return EXIT_FAILURE;
   }
 
   // Heap array to void chkstk error on Windows
@@ -104,7 +104,7 @@ int main(int argc, char **argv) {
   if (out == NULL) {
     printf("error: Malloc failed");
     stbi_image_free(image);
-    exit(EXIT_FAILURE);
+    return EXIT_FAILURE;
   }
 
   for (int i = 0, outi = 0; i < y; i++) { // outi is out string index
