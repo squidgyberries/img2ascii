@@ -38,23 +38,23 @@ const char *version = "0.1.0";
 
 int main(int argc, char **argv) {
   uintmax_t scalew = 1, scaleh = 1;
-  char *imgf = NULL;
+  char *imgf;
 
   if (argc < 2) {
-    printf("%s\n", help);
+    puts(help);
     return EXIT_SUCCESS;
   }
 
   for (int i = 1; i < argc; i++) {
     if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help")) {
-      printf("%s\n", help);
+      puts(help);
       return EXIT_SUCCESS;
     } else if (!strcmp(argv[i], "--version")) {
-      printf("%s\n", version);
+      printf("img2ascii version %s\n", version);
       return EXIT_SUCCESS;
     } else if (!strcmp(argv[i], "--scale-w") || !strcmp(argv[i], "--scale-width")) {
       if (!(argc > i + 1)) {
-        printf("error: %s: No value passed", argv[i]);
+        printf("error: %s: No value passed\n", argv[i]);
         return EXIT_FAILURE;
       }
       errno = 0;
@@ -67,7 +67,7 @@ int main(int argc, char **argv) {
       }
     } else if (!strcmp(argv[i], "--scale-h") || !strcmp(argv[i], "--scale-height")) {
       if (!(argc > i + 1)) {
-        printf("error: %s: No value passed", argv[i]);
+        printf("error: %s: No value passed\n", argv[i]);
         return EXIT_FAILURE;
       }
       errno = 0;
@@ -84,7 +84,7 @@ int main(int argc, char **argv) {
     }
   }
 
-  if (imgf == NULL) {
+  if (!imgf) {
     printf("error: No image file passed\n");
     return EXIT_FAILURE;
   }
@@ -102,7 +102,7 @@ int main(int argc, char **argv) {
       sizeof(char) * ((size_t)scalew * scaleh * x * y + scaleh * y +
                          1)); // scaleh * y for newline characters, 1 for null terminate
   if (out == NULL) {
-    printf("error: Malloc failed");
+    printf("error: Malloc failed\n");
     stbi_image_free(image);
     return EXIT_FAILURE;
   }
@@ -124,7 +124,7 @@ int main(int argc, char **argv) {
     }
   }
   out[scalew * scaleh * x * y + scaleh * y] = '\0';
-  printf("%s", out);
+  puts(out);
 
   free(out);
   stbi_image_free(image);
