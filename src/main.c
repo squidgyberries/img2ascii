@@ -61,7 +61,7 @@ int main(int argc, char **argv) {
       scalew = strtoumax(argv[++i], NULL, 10);
       if (errno) {
         char errmsg[128];
-        strerror_s(errmsg, 128, errno);
+        strerror_s(errmsg, sizeof(char) * 128, errno);
         printf("error: %s: %s\n", argv[i], errmsg);
         return EXIT_FAILURE;
       }
@@ -74,7 +74,7 @@ int main(int argc, char **argv) {
       scaleh = strtoumax(argv[++i], NULL, 10);
       if (errno) {
         char errmsg[128];
-        strerror_s(errmsg, 128, errno);
+        strerror_s(errmsg, sizeof(char) * 128, errno);
         printf("error: %s: %s\n", argv[i], errmsg);
         return EXIT_FAILURE;
       }
@@ -99,7 +99,7 @@ int main(int argc, char **argv) {
 
   // Heap array to void chkstk error on Windows
   char *out = (char *)malloc(
-      sizeof(char) * ((size_t)scalew * scaleh * x * y + scaleh * y +
+      sizeof(char) * (scalew * scaleh * x * y + scaleh * y +
                          1)); // scaleh * y for newline characters, 1 for null terminate
   if (out == NULL) {
     printf("error: Malloc failed\n");
